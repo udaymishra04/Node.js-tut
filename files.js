@@ -18,4 +18,30 @@ const fs = require('fs');
 // })
 
 // Directories
-fs.mkdir('./assests',(err))
+// if(!fs.existsSync('./assests'))
+// { fs.mkdir('./assests',(err) =>{
+//     if(err)
+//       console.log(err);
+//     else
+//       console.log('folder created');
+//   })
+// }
+// else{
+//   fs.rmdir('./assests',(err) => {
+//     if(err){
+//       console.log(err);
+//     }
+//     else{
+//       console.log('folder deleted')
+//     }
+//   })
+// }
+
+if(fs.existsSync('./blog/deleteme.txt')){
+  fs.unlink('./blog/deleteme.txt',(err) => {
+    if(err){
+      console.log(err);
+    }
+    console.log('file deleted');
+  })
+}
