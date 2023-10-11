@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../../partials/head.ejs') %>
+<body>
+  <%- include('../../partials/nav.ejs') %>
+    <!-- <h4>Update page</h4> -->
+    <div class="create-blog content">
+    <form action="/update/<%= blogs._id %>" method="POST">
+      <h2><%= blogs.title %></h2>
+      <label for="body">New blog body:</label>
+      <textarea id="body" required name="body"></textarea>
+      <button>Submit</button>
+    </form>
+    </div>
+
+  <%- include('../../partials/footer.ejs') %>  
+</body>
+</html>

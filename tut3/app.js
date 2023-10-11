@@ -1,6 +1,8 @@
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const blogRoutes = require('./routes/blogRoutes')
+const { result } = require('lodash');
 const Blog = require('./models/blog');
 
 // Invoking express
@@ -19,8 +21,12 @@ app.set('view engine','ejs');
 // listen for requests
 // app.listen(3000);
 
-// app.use(express.static('public'));
+// Middleware and static files
+app.use(express.static('public'));
+// urlencoded takes all the url encoded data and passes it to object so that we can use on request object
+app.use(express.urlencoded({extended: true}));
 app.use(morgan('dev'));
+
 // app.use((req,res,next) => {
 //   console.log('Hostname:',req.hostname);
 //   console.log('Path:',req.path);
@@ -42,7 +48,7 @@ app.use(morgan('dev'));
 //     })
 //     .catch((err) => {
 //       console.log(err)
-//     })
+//     }) 
 // })
 
 // app.get('/all-blogs',(req,res) => {
@@ -84,19 +90,30 @@ app.get('/about',(req, res)=> {
   res.render('about', {title: 'About'});
 })
 
-app.get('/blogs',(req,res) => {
-  Blog.find().sort({createdAt: -1})
-  .then((result) => {
-    res.render('index',{title: 'All Blogs', blogs: result})
+app.get('/update/:id',(req,res) => {
+  const id = req.params.id;
+  Blog.findById(id)
+  .then(result => {
+    res.render('blog/update', { blogs: result, title: 'Update Page' });
   })
-  .catch((err) => {
+})
+
+app.post('/update/:id',(req,res) => {
+  // console.log(req.body.body);
+  const bodyNew = req.body.body;
+  const id = req.params.id;
+  Blog.findByIdAndUpdate(id, {body: bodyNew})
+  .then(result => {
+    // console.log('updated');
+    res.redirect('/blogs');
+  })
+  .catch(err => {
     console.log(err);
   })
 })
 
-app.get('/blogs/create',(req,res) => {
-  res.render('create', {title: 'Create New Blog'});
-})
+// blog routes
+app.use('/blogs',blogRoutes);
 
 // Redirect
 // app.get('/about-me',(req,res) =>{
